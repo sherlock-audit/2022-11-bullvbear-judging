@@ -3,7 +3,7 @@
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/127 
 
 ## Found by 
-GimelSec, bin2chen, Ruhum, kirk-baird, \_\_141345\_\_, 0x52, carrot, hansfriese
+\_\_141345\_\_, carrot, 0x52, bin2chen, GimelSec, hansfriese, kirk-baird, Ruhum
 
 ## Summary
 
@@ -84,7 +84,7 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/4
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/114 
 
 ## Found by 
-GimelSec, dipp, aviggiano, Bahurum, bin2chen, curiousapple, imare, KingNFT, rvierdiiev, 0x52, carrot, hansfriese, WATCHPUG, neumo
+dipp, curiousapple, carrot, imare, rvierdiiev, 0x52, bin2chen, GimelSec, Bahurum, hansfriese, neumo, aviggiano, WATCHPUG, KingNFT
 
 ## Summary
 
@@ -135,7 +135,7 @@ PR fixing the transfer to 0x0 : https://github.com/BullvBear/bvb-solidity/pull/3
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/111 
 
 ## Found by 
-Bahurum, KingNFT, ak1, ElKu, WATCHPUG
+curiousapple, Bahurum, ak1, ElKu, WATCHPUG, KingNFT
 
 ## Summary
 
@@ -209,6 +209,69 @@ function settleContract(Order calldata order, uint tokenId) public nonReentrant 
 
 PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/14
 
+**sherlock-admin**
+
+> Escalate for 5 USDC
+> 
+> Hey Hi, 
+> From all issues considered duplicates here, this current issue https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/111 and https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/100 are incorrect, and shouldn't be considered.
+> Both of https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/111, https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/100 say that bulls can stop bears from settling via out-of-gas revert.
+> 
+> However,
+> Bulls can not directly stop bears from settling, as these 2 reports depict.
+> All they can do is increase transaction costs and add extra overhead, as correctly explained in
+> 
+> https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/147
+> https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/18
+> https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/142
+> 
+> Verification 
+> Copy follwoing test inside ``bvb-protocol> test> integration>`` and run 
+> ```forge test --match-contract TestGasGrief -vvvvv```
+> https://gist.github.com/abhishekvispute/26bc7e0e231d1ca3cf4deae2dd5d2ebf
+> 
+> In this test, you will see that the bull transfers the position to a malicious bull which has an infinite loop on received, but still bear can settle by paying additional overhead.
+> Hence the issue is not that bulls can cause out-of-gas reverts but bulls adding additional gas overhead.
+> The recommendation is also wrong for https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/111.
+> **Consider removing them from included issues.**
+> 
+> test trace (check how it comes out of "out of gas revert" and still allows to settle)
+> ```
+> [PASS] testGasGrief((uint256,uint256,uint256,uint256,uint256,uint16,address,address,address,bool)) (runs: 256, μ: 7301975, ~: 7304974)
+> Traces:
+>  .......
+>  .......
+>  .......
+>     ├─ [0] VM::prank(Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c]) 
+>     │   └─ ← ()
+>     ├─ [6672810] BvbProtocol::settleContract((4891, 864, 3601, 86401, 10, 20, 0x7B5969C684b101DA876186F1b8f3aB808e308B7c, 0xCe71065D4017F316EC606Fe4422e11eB2c47c246, 0x185a4dc360CE69bDCceE33b3784B0282f7961aea, false), 1234) 
+>     │   ├─ [6533561] BvbERC721::safeTransferFrom(Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], BvbMaliciousBull: [0x42997aC9251E5BB0A61F4Ff790E5B991ea07Fd9B], 1234) 
+>     │   │   ├─ emit Transfer(from: Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], to: BvbMaliciousBull: [0x42997aC9251E5BB0A61F4Ff790E5B991ea07Fd9B], id: 1234)
+>     │   │   ├─ [6522355] BvbMaliciousBull::onERC721Received(BvbProtocol: [0xf5a2fE45F4f1308502b1C136b9EF8af136141382], Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], 1234, 0x) 
+>     │   │   │   └─ ← "EvmError: OutOfGas"
+>     │   │   └─ ← "EvmError: Revert"
+>     │   ├─ [23775] BvbERC721::safeTransferFrom(Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], BvbProtocol: [0xf5a2fE45F4f1308502b1C136b9EF8af136141382], 1234) 
+>     │   │   ├─ emit Transfer(from: Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], to: BvbProtocol: [0xf5a2fE45F4f1308502b1C136b9EF8af136141382], id: 1234)
+>     │   │   ├─ [864] BvbProtocol::onERC721Received(BvbProtocol: [0xf5a2fE45F4f1308502b1C136b9EF8af136141382], Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], 1234, 0x) 
+>     │   │   │   └─ ← 0x150b7a02
+>     │   │   └─ ← ()
+>     │   ├─ [22852] BvbERC20::transfer(Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], 5755) 
+>     │   │   ├─ emit Transfer(from: BvbProtocol: [0xf5a2fE45F4f1308502b1C136b9EF8af136141382], to: Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c], amount: 5755)
+>     │   │   └─ ← true
+>     │   ├─ emit SettledContract(orderHash: 0xf737abeb07bf156db35b7a738422241312110236659091d877b6d09846af2e82, tokenId: 1234, order: (4891, 864, 3601, 86401, 10, 20, 0x7B5969C684b101DA876186F1b8f3aB808e308B7c, 0xCe71065D4017F316EC606Fe4422e11eB2c47c246, 0x185a4dc360CE69bDCceE33b3784B0282f7961aea, false))
+>     │   ├─ emit log_named_uint(key: safeTransferCase Gas, val: 107483)
+>     │   └─ ← ()
+>     ├─ [564] BvbERC20::balanceOf(Bull: [0xCf03Dd0a894Ef79CB5b601A43C4b25E3Ae4c67eD]) [staticcall]
+>     │   └─ ← 0
+>     ├─ [564] BvbERC20::balanceOf(Bear: [0x7B5969C684b101DA876186F1b8f3aB808e308B7c]) [staticcall]
+>     │   └─ ← 5755
+>     └─ ← ()
+> ```
+> 
+> 
+
+You've deleted an escalation for this issue.
+
 
 
 # Issue H-4: Reentrancy in `withdrawToken()` May Delete The Next User's Balance 
@@ -216,7 +279,7 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/14
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/88 
 
 ## Found by 
-bin2chen, 0x4non, kirk-baird, Zarf, ak1, 0xSmartContract, carrot, neumo
+Zarf, 0x4non, carrot, bin2chen, neumo, kirk-baird, 0xSmartContract, ak1
 
 ## Summary
 
@@ -322,6 +385,185 @@ PR fixing checks-effects-interactions pattern : https://github.com/BullvBear/bvb
 
 PR fixing another issue, removing the withdrawToken() method : https://github.com/BullvBear/bvb-solidity/pull/14
 
+**sherlock-admin**
+
+> Escalate for 1 USDC
+> 
+> Reason
+> There is no working re-entrancy attack path, the risk level should be LOW.
+> 
+> (1) The recipient has been changed to victim bull while re-entry 'settleContract' described in submission #77, #88, a next call from attacker to 'withdrawToken' will fail
+> 
+> (2) The underlying token has been transfered to attacker bull, so re-entry 'withdrawToken' decribed in submission #8 would not work too
+> 
+> (3) The last re-entry point is 'transferPosition', no damage too
+> 
+> Test case
+> ```solidity
+> // SPDX-License-Identifier: MIT
+> pragma solidity >=0.8.17;
+> 
+> import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+> import {Base} from "./Base.t.sol";
+> 
+> import {BvbProtocol} from "src/BvbProtocol.sol";
+> import "forge-std/console.sol";
+> 
+> contract Victim {
+>     // Some collection contracts limit max number of NFTs an account can hold.
+>     // This contract simulates an account subjected to the limit, that is the account can't receive
+>     // NFT now, but later if it sends/sells some NFTs out, it can receive NFT again, withdraw NTFs
+>     // which are kept in BvbProtocol due to previous limit.
+>     bool private _limited;
+>     
+>     function setLimited(bool limited) external {
+>         _limited = limited;
+>     }
+>     function onERC721Received(
+>         address ,
+>         address ,
+>         uint256 ,
+>         bytes calldata
+>     ) external returns (bytes4) {
+>         require(!_limited);
+>         return this.onERC721Received.selector;
+>     }
+> 
+>     function withdrawToken(address bvb, bytes32 orderHash, uint tokenId) external {
+>         BvbProtocol(bvb).withdrawToken(orderHash, tokenId);
+>     }
+> }
+> 
+> 
+> contract BadBearsAttackContract {
+>     bool private attack;
+>     bool private receiveNFT;
+>     address private owner;
+>     address private target;
+>     uint private tokenId;
+>     bytes32 private contractId;
+>     BvbProtocol.Order private order;
+> 
+>     constructor () {
+>         owner = msg.sender;
+>     }
+> 
+>     modifier onlyOwner {
+>         require(msg.sender == owner);
+>         _;
+>     }
+> 
+>     function enableAttack(address _target, bytes32 _contractId, uint _tokenId, BvbProtocol.Order calldata _order) external onlyOwner {
+>         attack = true;
+>         target = _target;
+>         contractId = _contractId;
+>         tokenId = _tokenId;
+>         order = _order;
+>     }
+> 
+>     function enableReceive(bool _receive) external onlyOwner {
+>         receiveNFT = _receive;
+>     }
+> 
+>     function onERC721Received(
+>         address ,
+>         address ,
+>         uint256 id,
+>         bytes calldata
+>     ) external returns (bytes4) {
+>         require(receiveNFT);
+>         if (attack && tokenId == id) {
+>             attack = false;
+>             BvbProtocol(target).settleContract(order, id);
+>             BvbProtocol(target).withdrawToken(contractId, id);
+>         }
+> 
+>         return this.onERC721Received.selector;
+>     }
+> }
+> 
+> contract ExploitWithdrawReentrancy is Base {
+>     Victim internal victim;
+>     BadBearsAttackContract internal attack;
+> 
+>     function setUp() public {
+>         victim = new Victim();
+>         attack = new BadBearsAttackContract();
+> 
+>         bvb.setAllowedAsset(address(weth), true);
+>         bvb.setAllowedCollection(address(doodles), true);
+> 
+>         deal(address(weth), bull, 0xffffffff);
+>         deal(address(weth), bear, 0xffffffff);
+>         deal(address(weth), address(victim), 0xffffffff);
+>         deal(address(weth), address(attack), 0xffffffff);
+>         vm.prank(bull);
+>         weth.approve(address(bvb), type(uint).max);
+>         vm.prank(bear);
+>         weth.approve(address(bvb), type(uint).max);
+>         vm.prank(address(victim));
+>         weth.approve(address(bvb), type(uint).max);
+>         vm.prank(address(attack));
+>         weth.approve(address(bvb), type(uint).max);
+>     }
+> 
+>     function testExploitWithdrawReentrancy() public {
+>         BvbProtocol.Order memory order = defaultOrder();
+>         order.maker = bear;
+>         order.isBull = false;
+> 
+>         bytes32 orderHash = bvb.hashOrder(order);
+> 
+>         // Sign the order
+>         bytes memory signature = signOrderHash(bearPrivateKey, orderHash);
+> 
+>         // Taker (Bull) match with this order
+>         vm.prank(address(victim));
+>         bvb.matchOrder(order, signature);
+> 
+>         // Give a NFT to the Bear + approve
+>         uint tokenId = 1234;
+>         doodles.mint(bear, tokenId);
+>         vm.prank(bear);
+>         doodles.setApprovalForAll(address(bvb), true);
+> 
+>         // Bad bear create a new order with the same collection but earlier expiry, and match with self's attack contract
+>         BvbProtocol.Order memory order2 = defaultOrder();
+>         order2.maker = bear;
+>         order2.isBull = false;
+>         order2.expiry = order.expiry - 1 days;
+>         bytes32 orderHash2 = bvb.hashOrder(order2);
+>         bytes memory signature2 = signOrderHash(bearPrivateKey, orderHash2);
+>         vm.prank(address(attack));
+>         bvb.matchOrder(order2, signature2);
+> 
+>         vm.prank(bear);
+>         bvb.settleContract(order2, tokenId);
+>         assertEq(bvb.withdrawableCollectionTokenId(address(doodles), tokenId), address(attack), "Token kept for badBear");
+>         vm.prank(address(attack));
+>         doodles.setApprovalForAll(address(bvb), true);
+> 
+>         
+>         // transfer the previous position to attack contract
+>         vm.prank(bear);
+>         bvb.transferPosition(orderHash, false, address(attack));
+> 
+>         attack.enableReceive(true);
+>         attack.enableAttack(address(bvb), orderHash2, tokenId, order);
+> 
+>         victim.setLimited(true);
+> 
+>         vm.expectRevert();
+>         vm.prank(address(attack));
+>         bvb.withdrawToken(orderHash2, tokenId);
+>     }
+> }
+> ```
+> 
+> 
+
+You've deleted an escalation for this issue.
+
 
 
 # Issue M-1: It doesn't handle fee-on-transfer/deflationary tokens 
@@ -329,7 +571,7 @@ PR fixing another issue, removing the withdrawToken() method : https://github.co
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/130 
 
 ## Found by 
-GimelSec, dipp, tives, Ruhum, rvierdiiev, cccz, Zarf, 0v3rf10w, Tomo, hansfriese, pashov
+Zarf, dipp, Tomo, tives, rvierdiiev, 0v3rf10w, GimelSec, hansfriese, cccz, pashov, Ruhum
 
 ## Summary
 
@@ -380,7 +622,7 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/8
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/4 
 
 ## Found by 
-GimelSec, bin2chen, 0xadrii, rvierdiiev, cccz, obront, 0xmuxyz, carrot, hansfriese, WATCHPUG
+0xmuxyz, 0xadrii, carrot, rvierdiiev, bin2chen, GimelSec, hansfriese, cccz, WATCHPUG, obront
 
 ## Summary
 
