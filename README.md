@@ -3,7 +3,7 @@
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/127 
 
 ## Found by 
-\_\_141345\_\_, carrot, 0x52, bin2chen, GimelSec, hansfriese, kirk-baird, Ruhum
+GimelSec, Ruhum, 0x52, hansfriese, kirk-baird, \_\_141345\_\_, bin2chen, carrot
 
 ## Summary
 
@@ -77,6 +77,10 @@ There are multiple solutions for this problem.
 
 PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/4
 
+**jack-the-pug**
+
+Fix confirmed
+
 
 
 # Issue H-2: Bull can `transferPosition()` to `address(0)` and the original order can be matched again 
@@ -84,7 +88,7 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/4
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/114 
 
 ## Found by 
-dipp, curiousapple, carrot, imare, rvierdiiev, 0x52, bin2chen, GimelSec, Bahurum, hansfriese, neumo, aviggiano, WATCHPUG, KingNFT
+WATCHPUG, aviggiano, GimelSec, curiousapple, neumo, bin2chen, Bahurum, 0x52, imare, hansfriese, dipp, rvierdiiev, KingNFT, carrot
 
 ## Summary
 
@@ -128,6 +132,10 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/1
 
 PR fixing the transfer to 0x0 : https://github.com/BullvBear/bvb-solidity/pull/3
 
+**jack-the-pug**
+
+Fix confirmed
+
 
 
 # Issue H-3: Bull can prevent `settleContract()` 
@@ -135,7 +143,7 @@ PR fixing the transfer to 0x0 : https://github.com/BullvBear/bvb-solidity/pull/3
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/111 
 
 ## Found by 
-curiousapple, Bahurum, ak1, ElKu, WATCHPUG, KingNFT
+WATCHPUG, curiousapple, ElKu, Bahurum, KingNFT, ak1
 
 ## Summary
 
@@ -272,6 +280,10 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/14
 
 You've deleted an escalation for this issue.
 
+**jack-the-pug**
+
+Fix confirmed
+
 
 
 # Issue H-4: Reentrancy in `withdrawToken()` May Delete The Next User's Balance 
@@ -279,7 +291,7 @@ You've deleted an escalation for this issue.
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/88 
 
 ## Found by 
-Zarf, 0x4non, carrot, bin2chen, neumo, kirk-baird, 0xSmartContract, ak1
+0xSmartContract, neumo, Zarf, kirk-baird, 0x4non, ak1, bin2chen, carrot
 
 ## Summary
 
@@ -564,6 +576,10 @@ PR fixing another issue, removing the withdrawToken() method : https://github.co
 
 You've deleted an escalation for this issue.
 
+**jack-the-pug**
+
+Fix confirmed
+
 
 
 # Issue M-1: It doesn't handle fee-on-transfer/deflationary tokens 
@@ -571,7 +587,7 @@ You've deleted an escalation for this issue.
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/130 
 
 ## Found by 
-Zarf, dipp, Tomo, tives, rvierdiiev, 0v3rf10w, GimelSec, hansfriese, cccz, pashov, Ruhum
+0v3rf10w, GimelSec, tives, cccz, Ruhum, Zarf, pashov, hansfriese, dipp, rvierdiiev, Tomo
 
 ## Summary
 
@@ -615,6 +631,10 @@ Use `balanceAfter - balanceBefore`:
 
 PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/8
 
+**jack-the-pug**
+
+Fix confirmed
+
 
 
 # Issue M-2: Bulls that are unable to receive NFTs will not be able to claim them later 
@@ -622,7 +642,7 @@ PR fixing this issue : https://github.com/BullvBear/bvb-solidity/pull/8
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/4 
 
 ## Found by 
-0xmuxyz, 0xadrii, carrot, rvierdiiev, bin2chen, GimelSec, hansfriese, cccz, WATCHPUG, obront
+WATCHPUG, 0xadrii, GimelSec, cccz, bin2chen, 0xmuxyz, hansfriese, rvierdiiev, obront, carrot
 
 ## Summary
 
@@ -698,6 +718,10 @@ PR fixing another issue, removing the withdrawToken() method : https://github.co
 
 This issue isn't High, because in the default behavior, no smart contract can match an Order. So for a Bull to be a smart contract, the user needs to match an order (as a maker or a taker) with an EOA, then transfer his position to a smart contract. This would be kind of a poweruser move, so we consider that he should be aware that his smart contract should handle NFT reception.
 Whatsoever, the issue is fixed thanks to the PR#14, the user will be able to transfer his position to whatever EOA or smart contract he wants before calling reclaimContract() to retrieve ERC20 assets or ERC721.
+
+**jack-the-pug**
+
+Fix confirmed. The bull who wish to withdraw the NFT to another address shall call `transferPosition()` before `reclaimContract()`.
 
 
 
