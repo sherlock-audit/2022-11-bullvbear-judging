@@ -3,7 +3,7 @@
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/127 
 
 ## Found by 
-GimelSec, Ruhum, 0x52, hansfriese, kirk-baird, \_\_141345\_\_, bin2chen, carrot
+kirk-baird, bin2chen, GimelSec, 0x52, \_\_141345\_\_, Ruhum, carrot, hansfriese
 
 ## Summary
 
@@ -88,7 +88,7 @@ Fix confirmed
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/114 
 
 ## Found by 
-WATCHPUG, aviggiano, GimelSec, curiousapple, neumo, bin2chen, Bahurum, 0x52, imare, hansfriese, dipp, rvierdiiev, KingNFT, carrot
+bin2chen, imare, GimelSec, neumo, WATCHPUG, curiousapple, 0x52, rvierdiiev, aviggiano, Bahurum, KingNFT, dipp, carrot, hansfriese
 
 ## Summary
 
@@ -143,7 +143,7 @@ Fix confirmed
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/111 
 
 ## Found by 
-WATCHPUG, curiousapple, ElKu, Bahurum, KingNFT, ak1
+ak1, WATCHPUG, curiousapple, Bahurum, KingNFT, ElKu
 
 ## Summary
 
@@ -291,7 +291,7 @@ Fix confirmed
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/88 
 
 ## Found by 
-0xSmartContract, neumo, Zarf, kirk-baird, 0x4non, ak1, bin2chen, carrot
+kirk-baird, ak1, bin2chen, 0x4non, neumo, 0xSmartContract, carrot, Zarf
 
 ## Summary
 
@@ -587,7 +587,7 @@ Fix confirmed
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/130 
 
 ## Found by 
-0v3rf10w, GimelSec, tives, cccz, Ruhum, Zarf, pashov, hansfriese, dipp, rvierdiiev, Tomo
+Tomo, GimelSec, pashov, rvierdiiev, 0v3rf10w, cccz, dipp, Ruhum, tives, Zarf, hansfriese
 
 ## Summary
 
@@ -642,7 +642,7 @@ Fix confirmed
 Source: https://github.com/sherlock-audit/2022-11-bullvbear-judging/issues/4 
 
 ## Found by 
-WATCHPUG, 0xadrii, GimelSec, cccz, bin2chen, 0xmuxyz, hansfriese, rvierdiiev, obront, carrot
+bin2chen, GimelSec, rvierdiiev, WATCHPUG, 0xmuxyz, 0xadrii, cccz, carrot, obront, hansfriese
 
 ## Summary
 
